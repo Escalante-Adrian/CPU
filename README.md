@@ -1,10 +1,17 @@
 # Versiones
 CPU 1.0: Exclusivamente ALU muy primitiva
+
 CPU 2.0: ALU implementada en un prototipo incompleto de la CPU
+
 CPU 3.0: Prototipo completado, CPU de 32 bits y programación secuencia de Fibonacci errónea
+
 CPU 4.0: CPU32Bits completamente funcional y capaz de ejecutar la secuencia de Fibonacci
+
 CPU 5.0: Adaptación de la CPU a 16 bits, con programación funcional de la secuencia de Fibonacci
+
 CPU 6.0: CPU16Bits completamente funcional, optimizada y con enormes cambios estéticos, además de que habilita el uso de la memoria. Capaz de ejecutar la secuencia de Fibonacci y una prueba para verificar el uso de la memoria
+
+CPU 6.1: Actualiza el README.md y soluciona el problema de mala visualización
 
 # Instrucciones de ALU (Completa)
 1. add - 0000 - Sumar
@@ -15,11 +22,12 @@ CPU 6.0: CPU16Bits completamente funcional, optimizada y con enormes cambios est
 6. NAND - 0101 - Compuerta NAND
 7. NOR - 0110 - Compuerta NOR
 8. XNOR - 0111- Compuerta XNOR
-**_ESTAS INSTRUCCIONES NO SIRVEN PARA LA ALU DEL CPU YA QUE USA UNA SIMPLIFICADA
+
+**_ESTAS INSTRUCCIONES NO SIRVEN PARA LA ALU DEL CPU YA QUE USA UNA SIMPLIFICADA_**
 
 # Estructura 16 BITS
 
-**_TODOS USAN 3 OPCODE
+**_TODOS USAN 3 OPCODE_**
 
 ### Tipo R
 
@@ -96,48 +104,62 @@ CPU 6.0: CPU16Bits completamente funcional, optimizada y con enormes cambios est
 
 
 ## Opcodes
-000 - Tipo R
-001 - BEQ
-010 - Jump
-011 - Addi
-100 - LW
-101 - SW
-110 - NOP (No Operation)
-111 - Restart
+0. 000 - Tipo R
+1. 001 - BEQ
+2. 010 - Jump
+3. 011 - Addi
+4. 100 - LW
+5. 101 - SW
+6. 110 - NOP (No Operation)
+7. 111 - Restart
+
 ## Funct
-AND - 00
+0. 00 - AND
+1. 01 - OR
+2. 10 - SUMA
+3. 11 - RESTA
 OR - 01
-SUMA - 10
-RESTA - 11
 
 Si ALUOP es 01: Toma Branch (Activa solo resta)
+
 Si ALUOP es 10: Toma Tipo R
+
 Si ALUOP es 11: Toma addi, lw y sw (Activa solo suma)
+
 ## Registros
-0. A - 00 - Primer operando
-1. B - 01 - Segundo operando
-2. C - 10 - Tercer operando auxiliar
-3. D - 11 - Vale 233, sirve para el beq
-4. PC - N/A - Contador de programa
-5. 
+0. 00 - A - Primer operando
+1. 01 - B - Segundo operando
+2. 10 - C - Tercer operando auxiliar
+3. 11 - D - Vale 233, sirve para el beq
+4. N/A - PC - Contador de programa
+
 # Secuencia de Fibonacci
 ## Pseudo código MIPS
 main:
+
 a = 1
+
 b = 1
+
 d = 233
 
+
 loop:
+
 c = a + b
+
 a = b
+
 b = c
 if (c == d) ----> restart
+
 else PC = PC + 1
+
 jump to loop
 
 ## Código C++
 
-```cpp
+``` cpp
 #include <stdio.h>
 
 int main(void) {
@@ -160,7 +182,7 @@ int main(void) {
 
 ## Código MIPS
 
-```asm
+``` asm
 main:
 0   addi a, a, 0        # Se asigna el valor 0 a A
 1   addi b, b, 1        # Se asigna el valor 1 a B
@@ -179,7 +201,7 @@ reiniciar:
 ```
 
 
-restart: Llama un JUMP que usa los bits no utilizados, y en vez de saltar en el PC, activa el restart del PC y los registros con el 1110 0000 0000 0000
+restart: Función inventada donde cuando llega el opcode 111, reinicia los registros y el PC
 
 ## Código a Lenguaje Maquina
 
@@ -265,8 +287,9 @@ reiniciar:
 | 07  | addi b, c, 0        | 7200             |
 | 08  | j loop              | 4004             |
 | 09  | restart             | E000             |
+
 Para copiar y pegar:
-```a
+``` asm
 6000 6A01 7400 7EE9 3604 0302 6800 7200
 4004 E000
 ```
@@ -275,18 +298,26 @@ Para copiar y pegar:
 # Test de la Memoria
 ## Pseudo código MIPS
 main:
+
 Espacio 0: 32
+
 Espacio 4: 68
+
 a = Espacio 0 (32)
+
 b = Espacio 4 (68)
+
 d = a + b
+
 Espacio 8: d
+
 c = Espacio 8 (d)
+
 restart
 
 ## Código C++
 
-```cpp
+``` cpp
 #include <stdio.h>
 
 int main(void) {
@@ -337,8 +368,8 @@ main:
 3	sw d, 0(c)           # Guarda en el espacio 0 (c) el valor de D
 4	sub d, d, d          # D = D - D (Establece en 0)
 5	lw c, 0(d)           # Carga en c el valor del espacio 0 (d)
-6   NOP                  # Delay para mostrar mas tiempo en pantalla
-7   sw d, 0(d)           # Carga 0 en el valor del espacio 0
+6       NOP                  # Delay para mostrar mas tiempo en pantalla
+7       sw d, 0(d)           # Carga 0 en el valor del espacio 0
 8	restart              # Reiniciar
 ```
 
@@ -412,6 +443,7 @@ main:
 | 06  | NOP           | C000             |
 | 07  | sw d, 0(d)    | BE00             |
 | 08  | restart       | E000             |
+
 Para copiar y pegar:
 ``` asm
 6020 6A44 0382 B600 1F83 9C00 C000 BE00
